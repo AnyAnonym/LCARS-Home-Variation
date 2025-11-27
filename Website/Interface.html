@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LCARS Home Assistant</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #fff;
+      font-family: 'Eurostile', sans-serif;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    header {
+      background-color: #e87c24;
+      color: black;
+      font-size: 2em;
+      padding: 10px 20px;
+      border-bottom-left-radius: 50px;
+    }
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 1em;
+      padding: 20px;
+    }
+    .panel {
+      background-color: #502f88;
+      border-top-right-radius: 40px;
+      border-bottom-right-radius: 40px;
+      padding: 20px;
+    }
+    .control {
+      background-color: #c96ba2;
+      margin: 10px;
+      padding: 10px;
+      border-radius: 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: transform .1s ease;
+    }
+    .control:hover {
+      transform: scale(1.05);
+      background-color: #f284d0;
+    }
+    footer {
+      background-color: #0072bc;
+      padding: 5px;
+      text-align: center;
+      border-top-right-radius: 40px;
+    }
+    @media (max-width: 768px) {
+      main { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>LCARS Home Assistant</header>
+  <main>
+    <div class="panel">
+      <h2>Systemstatus</h2>
+      <p>Siemens SPS: <span id="s7-status">Verbunden</span></p>
+      <p>Beckhoff SPS: <span id="beckhoff-status">Getrennt</span></p>
+    </div>
+    <div class="panel">
+      <h2>Steuerung</h2>
+      <div class="control" onclick="toggle('lamp')">💡 Lampe umschalten</div>
+      <div class="control" onclick="toggle('motor')">⚙️ Motor starten</div>
+    </div>
+  </main>
+  <footer>LCARS Interface v0.1 – Raspberry Pi 4 B</footer>
+  <script>
+    function toggle(device) {
+      fetch(`/api/toggle/${device}`)
+        .then(res => res.json())
+        .then(data => alert(`${device} → ${data.status}`))
+        .catch(err => alert('Fehler: ' + err));
+    }
+  </script>
+</body>
+</html>
